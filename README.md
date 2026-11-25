@@ -68,7 +68,7 @@ text = processor.tokenizer.decode(ids[0, inputs["input_ids"].shape[1]:],
 Local fix/gemma4-audio-sdpa has two modified files, 28 inserted lines: checkpoint_coverage.py (21) and sdpa_flex_sliding.py (7). Audio eager and consumer-SRAM training compatibility measured locally only. Cross-model/high-SRAM testing pending. Not upstream-ready and not merged/pushed.
 
 ## Release scope
-Team Astrum review selected an adapter-first release under Apache-2.0. The adapter requires the original base model; merged weights and optimizer/resume state are not included. Initial Hugging Face distribution is private; public visibility requires a separate approval. The local operator inventory is not part of the model payload.
+This adapter-first release uses Apache-2.0 and requires google/gemma-4-E4B-it as its base model. Merged weights and optimizer/resume state are not included.
 
 ## Reproduction layout
 Scripts/configs are sanitized audit copies. PROJECT_DIR placeholders must be resolved by an owner-approved setup; no training or generation is authorized by this README. Bulk datasets and cached model are not bundled. Reports are saved results, not recomputed model inference.
