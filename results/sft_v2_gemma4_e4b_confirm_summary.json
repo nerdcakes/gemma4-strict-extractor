@@ -1,0 +1,48 @@
+{
+  "records": 200,
+  "json_valid_rate": 1.0,
+  "json_valid_stripped_rate": 1.0,
+  "found_exact_precision": 0.9983974358974359,
+  "found_exact_recall": 0.9888888888888889,
+  "found_exact_f1": 0.9936204146730463,
+  "missing_abstention_acc": 1.0,
+  "conflict_detection_acc": 0.9928571428571429,
+  "hallucination_rate": 0.0,
+  "hallucination_rate_valid_fields": 0.0,
+  "invalid_json_rows": 0,
+  "error_counts": {
+    "missed_conflict": 3
+  },
+  "field_totals": {
+    "found_gt": 630,
+    "missing_gt": 350,
+    "conflict_gt": 420,
+    "found_tp": 623,
+    "missing_correct": 350,
+    "conflict_correct": 417,
+    "hallucination": 0,
+    "found_pred": 624
+  },
+  "denominator_note": "Primary hallucination_rate divides detected field hallucinations by all N*7 fields. Invalid rows are separately reported and receive no hallucination field classification; valid-fields-only rate also provided. Invalid rows receive no task TP credit.",
+  "model_path": "checkpoints/sft_v2_gemma4_e4b_merged",
+  "model_revision": null,
+  "transformers_version": "5.20.2",
+  "torch_version": "2.11.0+cu130",
+  "batch_size": 4,
+  "max_new_tokens": 768,
+  "do_sample": false,
+  "enable_thinking": false,
+  "attention": {
+    "text_config": "sdpa",
+    "vision_config": "sdpa",
+    "audio_config": "eager"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "load_seconds": 5.547919575001288,
+  "inference_seconds": 332.65076041700377,
+  "wall_clock_seconds": 338.19867999200505,
+  "peak_vram_allocated_bytes": 16997163008,
+  "peak_vram_reserved_bytes": 18148753408,
+  "generated_tokens_nonpadding": 59994
+}

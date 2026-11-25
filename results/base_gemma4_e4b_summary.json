@@ -1,0 +1,52 @@
+{
+  "records": 300,
+  "json_valid_rate": 0.9633333333333334,
+  "json_valid_stripped_rate": 0.9633333333333334,
+  "found_exact_precision": 0.9770925110132158,
+  "found_exact_recall": 0.9601731601731601,
+  "found_exact_f1": 0.9685589519650655,
+  "missing_abstention_acc": 0.8038095238095239,
+  "conflict_detection_acc": 0.9380952380952381,
+  "hallucination_rate": 0.007619047619047619,
+  "hallucination_rate_valid_fields": 0.007909045971329708,
+  "invalid_json_rows": 11,
+  "error_counts": {
+    "missed_conflict": 26,
+    "hallucinated_missing": 12,
+    "ungrounded_quote": 4,
+    "invalid_json_or_schema": 11,
+    "invalid_found_evidence": 1
+  },
+  "field_totals": {
+    "found_gt": 1155,
+    "missing_gt": 525,
+    "conflict_gt": 420,
+    "found_pred": 1135,
+    "found_tp": 1109,
+    "missing_correct": 422,
+    "conflict_correct": 394,
+    "hallucination": 16
+  },
+  "denominator_note": "Primary hallucination_rate divides detected field hallucinations by all N*7 fields. Invalid rows are separately reported and receive no hallucination field classification; valid-fields-only rate also provided. Invalid rows receive no task TP credit.",
+  "model_path": "google/gemma-4-E4B-it",
+  "model_revision": null,
+  "transformers_version": "5.20.2",
+  "torch_version": "2.11.0+cu130",
+  "batch_size": 8,
+  "max_new_tokens": 768,
+  "do_sample": false,
+  "enable_thinking": false,
+  "attention": {
+    "text_config": "sdpa",
+    "vision_config": "sdpa",
+    "audio_config": "eager"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "load_seconds": 3.8847571030000836,
+  "inference_seconds": 255.89192407100018,
+  "wall_clock_seconds": 259.77668117400026,
+  "peak_vram_allocated_bytes": 16991100928,
+  "peak_vram_reserved_bytes": 18901630976,
+  "generated_tokens_nonpadding": 76103
+}

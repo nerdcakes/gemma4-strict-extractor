@@ -1,0 +1,50 @@
+diff --git a/halo/model_loading/checkpoint_coverage.py b/halo/model_loading/checkpoint_coverage.py
+index 5b2fc5f5..941ad4a3 100644
+--- a/halo/model_loading/checkpoint_coverage.py
++++ b/halo/model_loading/checkpoint_coverage.py
+@@ -123,6 +123,27 @@ def from_pretrained_verified(
+     ``config`` carries this run's stamps and is kept; one read from the checkpoint takes
+     :func:`drop_toolkit_stamps`."""
+     reject_adapter_directory(model_name_or_path)
++    requested_attention = kwargs.get("attn_implementation")
++    if isinstance(requested_attention, str) and requested_attention != "eager":
++        cfg = kwargs.get("config")
++        if cfg is None:
++            from transformers import AutoConfig
++
++            cfg = AutoConfig.from_pretrained(
++                model_name_or_path,
++                **{k: kwargs[k] for k in ("revision", "trust_remote_code", "local_files_only", "token", "cache_dir") if k in kwargs},
++            )
++        if (
++            getattr(cfg, "model_type", "") == "gemma4"
++            and "audio_config" in getattr(cfg, "sub_configs", {})
++            and getattr(cfg, "audio_config", None) is not None
++        ):
++            kwargs["attn_implementation"] = {
++                name: "eager" if name == "audio_config" else requested_attention
++                for name in cfg.sub_configs
++                if getattr(cfg, name, None) is not None
++            }
++            cfg._attn_implementation = kwargs["attn_implementation"]
+     with full_weights_on_every_rank():
+         model, loading_info = model_class.from_pretrained(model_name_or_path, output_loading_info=True, **kwargs)
+     if kwargs.get("config") is None:
+diff --git a/halo/models/attention/sdpa_flex_sliding.py b/halo/models/attention/sdpa_flex_sliding.py
+index bede6b37..0fe1a275 100644
+--- a/halo/models/attention/sdpa_flex_sliding.py
++++ b/halo/models/attention/sdpa_flex_sliding.py
+@@ -196,6 +196,13 @@ def _block_sparse_attention(
+         query.dtype in (torch.bfloat16, torch.float16) and query.shape[-1] == _TUNED_HEAD_DIM and is_blackwell_gpu()
+     )
+     kernel_options = _SM100_SLIDING_KERNEL_OPTIONS if tuned else None
++    if query.is_cuda and query.shape[-1] >= 256 and torch.cuda.get_device_properties(query.device).shared_memory_per_block_optin < 163840:
++        kernel_options = {
++            "BLOCK_M": 64, "BLOCK_N": 32,
++            "BLOCK_M1": 32, "BLOCK_N1": 64,
++            "BLOCK_M2": 64, "BLOCK_N2": 32,
++            "num_warps": 4, "num_stages": 1,
++        }
+     rows = zip(_padded_rows(query), _padded_rows(key), _padded_rows(value), block_masks, strict=True)
+     with torch.set_grad_enabled(records_grad), torch.autocast(query.device.type, enabled=False):
+         out = torch.cat(

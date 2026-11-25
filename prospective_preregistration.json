@@ -1,0 +1,60 @@
+{
+  "version": "Step4C-prospective-v1",
+  "seed": 20261126,
+  "inference_performed": false,
+  "confirm_sha256": "8a37722dd376091b4a90a3cffc567fb79f3a0b87adbc53762059a9bc5053ed10",
+  "lockbox_sha256": "85715972a2021ae64622ea07278852c205507ed2a7e301879527fb224d0a7643",
+  "grader": "grader.py unchanged",
+  "field_correct": {
+    "FOUND": "grade(raw,row).field_scores[field].found_tp",
+    "MISSING": "grade(raw,row).field_scores[field].missing_correct",
+    "CONFLICT": "grade(raw,row).field_scores[field].conflict_correct",
+    "invalid_row": "all seven fields incorrect"
+  },
+  "row_correct": "all seven field_correct booleans true",
+  "field_accuracy": "sum(field_correct) / number of included GT fields",
+  "row_accuracy": "sum(row_correct) / number of included packets",
+  "primary_slices": {
+    "attribution_trap": {
+      "denominator": 980,
+      "membership": "frozen field_tags contains attribution_trap"
+    },
+    "separated_conflict": {
+      "denominator": 420,
+      "membership": "frozen field_tags contains separated_conflict"
+    }
+  },
+  "packet_format_metrics": "For each frozen pure/hybrid packet_format report all-seven exact row accuracy and field accuracy separately, with integer numerators/denominators. No vague average.",
+  "pairing": {
+    "baseline": "base google/gemma-4-E4B-it",
+    "candidate": "SFTv2 merged checkpoint",
+    "join": "exact confirm ID and field key; no dropped invalid rows",
+    "ordered_categories": [
+      "both_correct",
+      "v2_only_correct",
+      "baseline_only_correct",
+      "both_incorrect"
+    ],
+    "levels": [
+      "all fields",
+      "primary slice fields",
+      "all-seven packet correctness"
+    ]
+  },
+  "leakage_definition": "For frozen attribution witness, report exact predicted FOUND value equals the recorded nonapplicant value while applicant GT is MISSING or distinct FOUND. Report count / attribution fields and matching IDs/fields. This is an explicit exact-string witness metric, not all hallucinations, substring guessing, or invented detector. Invalid rows are incorrect but no parsed value is attributed.",
+  "freeze_rule": {
+    "TRIGGER_if_any": [
+      "v2 raw JSON validity < 0.98",
+      "v2 frozen-grader detected field hallucinations >= 21 out of 1400",
+      "v2 conflict_detection_acc < 0.94",
+      "v2 missing_abstention_acc < 0.94",
+      "v2 attribution_trap exact field accuracy < 0.92 with denominator >=150",
+      "v2 separated_conflict exact field accuracy < 0.92 with denominator >=150"
+    ],
+    "otherwise": "SKIP",
+    "insufficient_primary_denominator": "STOP protocol invalid, do not infer SKIP",
+    "meaning": "TRIGGER recommends consideration only; requires later explicit owner approval before SMPO, never automatically launches."
+  },
+  "lockbox_policy": "150 rows sealed; machine generation/selftest/hash only; no manual row exposure, previews or model inference in Part1 or implied by confirmation dispatch. Separate explicit release required.",
+  "immutability": "Freeze this JSON and data/script hashes before any inference; no post-outcome threshold/slice/denominator/pairing edits."
+}
